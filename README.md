@@ -4,4 +4,20 @@ Here is a link to the repository slackbot app I made which grabs the 100 most re
 
 https://github.com/meredythp/slack-personality-bot
 
-## screenshots
+## Screenshots
+
+Command Directions Example:
+
+![Directions screen](screenshots/directions.png)
+
+Direct Message Example:
+
+![DM screen](screenshots/DM.png)
+
+Slackbot Profile:
+
+![Profile screen](screenshots/profile.png)
+
+Personality Results Example:
+
+![Results screen](screenshots/results_example.png)
