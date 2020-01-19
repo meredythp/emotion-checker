@@ -21,3 +21,9 @@ Slackbot Profile:
 Personality Results Example:
 
 ![Results screen](screenshots/results_example.png)
+
+## Built With
+* JavaScript
+* Node
+* Ngrok
+* Slack 
