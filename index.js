@@ -121,6 +121,7 @@ function getPersonality(targetMessages, targetUser, channel_id) {
 			.then(profile => {
 				let personality = JSON.stringify(profile, null, 2);
 				console.log(`personality results are ${personality}`);
+				postFile(profile, targetUser, channel_id);
 				postPersonality(profile, targetUser, channel_id);
 			})
 			.catch(err => {
@@ -130,21 +131,28 @@ function getPersonality(targetMessages, targetUser, channel_id) {
 
 const apiUrl = 'https://slack.com/api';
 
+const postFile = async(profile, user, channel) => { 
+	const args = {
+		token: process.env.SLACK_ACCESS_TOKEN,
+		channel: channel,
+		content: JSON.stringify(profile, null, 2)
+	};
+	const result = await axios.post(`${apiUrl}files.upload`, qs.stringify(args))
+		.then((result) => { 
+	    console.log('uploaded file'); 
+	  }).catch((err) => {
+	    console.log('err on files upload %0', err);
+	  });
+	console.log(result);
+};
+
 const postPersonality = async(profile, user, channel) => { 
 	const args = {
 		token: process.env.SLACK_ACCESS_TOKEN,
 		channel: channel,
-		text: `<@${user}>'s top personality traits are: ${JSON.stringify(profile.result.personality[0].name)}, ${JSON.stringify(profile.result.personality[1].name)}, ${JSON.stringify(profile.result.personality[2].name)}, ${JSON.stringify(profile.result.personality[3].name)}, ${JSON.stringify(profile.result.personality[4].name)}`
+		text: `<@${user}>'s top personality traits are: ${JSON.stringify(profile.result.personality[0].name)}, ${JSON.stringify(profile.result.personality[1].name)}, ${JSON.stringify(profile.result.personality[2].name)}, ${JSON.stringify(profile.result.personality[3].name)}, and ${JSON.stringify(profile.result.personality[4].name)}`
 	};
 	const result = await axios.post(`${apiUrl}/chat.postMessage`, qs.stringify(args));
-	console.log(result);
-	// const args = {
-	//   file: require('./profile.json'),
-	//   channel: channel,
-	//   token: process.env.SLACK_ACCESS_TOKEN
-	// };
-	// // console.log(`formData: ${args} FORM DATA OVER`);
-	// const result = await axios.post(`${apiUrl}/files.upload`, qs.stringify(args));
 	// console.log(result);
 };
 
@@ -155,7 +163,7 @@ const postSlashDirections = async(profile, user, channel) => {
 		text: `use /personality_bot @user_name to find personality results`
 	};	
 	const directions = await axios.post(`${apiUrl}/chat.postMessage`, qs.stringify(args));
-	console.log(directions);
+	// console.log(directions);
 };
 
 const getConverstationHistory = async(channel_id, targetUser) => { 
