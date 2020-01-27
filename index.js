@@ -17,7 +17,6 @@ const verifySignature = (req) => {
 		const signature = req.headers['x-slack-signature'];
 		const timestamp = req.headers['x-slack-request-timestamp'];
 		const hmac = crypto.createHmac('sha256', process.env.SLACK_SIGNING_SECRET);
-		// console.log(`slack signing secret is ${process.env.SLACK_SIGNING_SECRET}`);
 		const [version, hash] = signature.split('=');
 	
 		const fiveMinutesAgo = ~~(Date.now() / 1000) - (60 * 5);
@@ -43,7 +42,6 @@ app.use(bodyParser.json({ verify: rawBodyBuffer }));
 app.post('/event', (req, res) => {
 		console.log(req.body);
 		if (req.body.type === 'url_verification') {
-				// console.log(req.body.challenge);
 				res.send(req.body.challenge);
 		}
 
@@ -65,8 +63,6 @@ app.post('/event', (req, res) => {
 				}
 
 				let regex = /(^\/)/;
-				// if(subtype === 'bot_message' || regex.test(text)) return;
-				//   getPersonality(text, user, channel);
 			}
 		});
 
@@ -101,12 +97,6 @@ const personalityInsights = new PersonalityInsightsV3({
 
 
 function getPersonality(targetMessages, targetUser, channel_id) {
-
-	// let regex = /(^:.*:$)/; // Slack emoji, starts and ends with :
-	// if(regex.test(text)) {
-	//   text = text.replace(/_/g , ' ');
-	//   text = text.replace(/:/g , '');
-	// }
 		console.log(targetMessages);
 		console.log(personalityInsights)
 		const profileParams = {
@@ -153,7 +143,6 @@ const postPersonality = async(profile, user, channel) => {
 		text: `<@${user}>'s top personality traits are: ${JSON.stringify(profile.result.personality[0].name)}, ${JSON.stringify(profile.result.personality[1].name)}, ${JSON.stringify(profile.result.personality[2].name)}, ${JSON.stringify(profile.result.personality[3].name)}, and ${JSON.stringify(profile.result.personality[4].name)}`
 	};
 	const result = await axios.post(`${apiUrl}/chat.postMessage`, qs.stringify(args));
-	// console.log(result);
 };
 
 const postSlashDirections = async(profile, user, channel) => { 
@@ -163,7 +152,6 @@ const postSlashDirections = async(profile, user, channel) => {
 		text: `use /personality_bot @user_name to find personality results`
 	};	
 	const directions = await axios.post(`${apiUrl}/chat.postMessage`, qs.stringify(args));
-	// console.log(directions);
 };
 
 const getConverstationHistory = async(channel_id, targetUser) => { 
@@ -181,7 +169,6 @@ const getConverstationHistory = async(channel_id, targetUser) => {
 				targetMessages.contentItems.push(inputMessage);
 			};
 		});
-	// console.log(targetMessages);
 	getPersonality(targetMessages, targetUser, channel_id);
 };					
 
