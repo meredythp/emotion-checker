@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/meredythp/slack-personality-bot/issues"
   },
-  "homepage": "https://github.com/meredythp/slack-personality-bot#readme"
+  "homepage": "https://github.com/meredythp/slack-personality-bot#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "ibm-watson": "^5.6.0"
+  }
 }
