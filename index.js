@@ -1,72 +1,75 @@
 'use strict';
 
-const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
-const { IamAuthenticator } = require('ibm-watson/auth');
-
-const personalityInsights = new PersonalityInsightsV3({
-	version: '2017-10-13',
-	authenticator: new IamAuthenticator({
-		apikey: `qM9W4FDh0YMqLTswruNChPOlYXnD1EP0Rpmw-0kXj2T_`,
-	}),
-	url: `https://api.us-south.personality-insights.watson.cloud.ibm.com/instances/026798e4-d337-4c2f-b7c0-f77b084b083a`,
-});
-
-function getPersonality(targetMessages, targetUser) {
-		console.log(targetMessages);
-		console.log(personalityInsights)
-		const profileParams = {
-			// Get the content from the JSON file.
-			content: targetMessages,
-			contentType: 'application/json',
-			consumptionPreferences: true,
-			rawScores: true,
-		};
-
-		personalityInsights.profile(profileParams)
-			.then(profile => {
-				let personality = JSON.stringify(profile, null, 2);
-				console.log(`personality results are ${personality}`);
-			})
-			.catch(err => {
-				console.log('error:', err);
-			});
+function getSentiment(inputText) {
+	$('.results').addClass('hidden')
+	document.getElementById('submitButton').style.backgroundColor = 'grey';
+	var encodedText = encodeURIComponent(inputText);
+	getTone(encodedText);
+	var url = "https://twinword-emotion-analysis-v1.p.rapidapi.com/analyze/?text=" + encodedText
+	fetch(url, {
+		"method": "GET",
+		"headers": {
+			"x-rapidapi-host": "twinword-emotion-analysis-v1.p.rapidapi.com",
+			"x-rapidapi-key": "5ba8f7281emshb675d036ab63e58p1f65e4jsn0785dc59f1da"
+		}
+	})
+	.then(response => response.json())
+	.then(responseJson => displayResults(responseJson))
+	.catch(error => alert(error));
 }
 
-funtion getUserName(inputText) {
-	console.log(`inputText are ${inputText}`);
-}
-
-// funtion getUserMessages(inputText, userName) {
-
-// }
-
-function processInputs(inputText) {
-	console.log(`inputText are ${inputText}`)
-	getUserName(inputText)
-	// getUserMessages(inputText, userName)
-	// displayResults()
+function getTone(encodedText) {
+	var url = "https://twinword-sentiment-analysis.p.rapidapi.com/analyze/?text=" + encodedText
+	fetch(url, {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "twinword-sentiment-analysis.p.rapidapi.com",
+		"x-rapidapi-key": "5ba8f7281emshb675d036ab63e58p1f65e4jsn0785dc59f1da"
+		}
+	})
+	.then(response => response.json())
+	.then(responseJson => updateBackground(responseJson))
+	.catch(error => alert(error));
 }
 
 function displayResults(responseJson) {
-  console.log(responseJson);
-  document.getElementById('results').innerHTML = "<h2>Here are your personality traits:</h2>";
+	document.getElementById('submitButton').style.backgroundColor = "rgb(0, 173, 185)";
+	console.log(responseJson);
+	console.log(responseJson.emotions_detected)
+	if (responseJson.emotions_detected.length > 0) {
+		document.getElementById('results').innerHTML = "<h2>Emotions detected:</h2>";
+		for(var i = 0; i < responseJson.emotions_detected.length; i++) {
+			var emotion = responseJson.emotions_detected[i];
+			var newTrait = document.createElement("span");
+			newTrait.setAttribute("class", "results");
+			newTrait.innerHTML = emotion;
+			document.getElementById('results').appendChild(newTrait);
+			document.getElementById('results').appendChild(document.createElement("br"));
+		}
+	} else {
+		document.getElementById('results').innerHTML = "<h2>No emotions detected</h2>";
+	}
+	$('.results').removeClass('hidden');
+}
 
-  for(var i = 0; i < responseJson.message.length; i++) {
-    var pictureURL = responseJson.message[i];
-    console.log(pictureURL);
-    var newTrait = document.createElement("ul");
-    newTrait.setAttribute("class", "results");
-    // console.log(newDog);
-    document.getElementById('results').appendChild(newTrait);
-  }
-  $('.results').removeClass('hidden');
+function updateBackground(responseJson) {
+	console.log(responseJson.type)
+	if (responseJson.type == "positive") {
+		document.getElementById('results').style.backgroundColor = "rgb(255, 252, 156)";
+	} else if (responseJson.type == "negative") {
+		document.getElementById('results').style.backgroundColor = "rgb(255, 207, 207)";
+	}
+	else {
+		document.getElementById('results').style.backgroundColor = "#f2f2f2";
+	}
 }
 
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
-    var inputText = document.getElementById('messageText').value;
-    processInputs(inputText);
+		var inputText = document.getElementById('messageText').value;
+		console.log(inputText);
+    getSentiment(inputText);
   });
 }
 
