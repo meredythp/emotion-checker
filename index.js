@@ -1,5 +1,6 @@
 'use strict';
 
+// pings emotion checking api and starts process to get tone
 function getSentiment(inputText) {
 	$('.results').addClass('hidden')
 	document.getElementById('submitButton').style.backgroundColor = 'grey';
@@ -18,6 +19,7 @@ function getSentiment(inputText) {
 	.catch(error => alert(error));
 }
 
+// pings tone detection api and starts update background method with results
 function getTone(encodedText) {
 	var url = "https://twinword-sentiment-analysis.p.rapidapi.com/analyze/?text=" + encodedText
 	fetch(url, {
@@ -32,6 +34,7 @@ function getTone(encodedText) {
 	.catch(error => alert(error));
 }
 
+// adds each trait as a span with results class and unhides results container
 function displayResults(responseJson) {
 	document.getElementById('submitButton').style.backgroundColor = "rgb(0, 173, 185)";
 	console.log(responseJson);
@@ -52,6 +55,7 @@ function displayResults(responseJson) {
 	$('.results').removeClass('hidden');
 }
 
+// makes results container yellow, red, or grey, depending on tone
 function updateBackground(responseJson) {
 	console.log(responseJson.type)
 	if (responseJson.type == "positive") {
@@ -74,6 +78,6 @@ function watchForm() {
 }
 
 $(function() {
-  console.log('App loaded! Waiting for submit!');
+  console.log('App loaded, watching');
   watchForm();
 });
