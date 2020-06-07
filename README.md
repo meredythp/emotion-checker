@@ -1,29 +1,32 @@
-# slack-personality-bot
+# emotion-checker
 
-Here is a link to the repository slackbot app I made which grabs the 100 most recent messages in a public channel, and returns Watson's AI results for top 5 personality traits of a given user with the command /personality_bot @username.
+Here is a link to the live app for the simple web app I created to take user input text, and return the emotions detected from an emotion detection API.  The background color of the results changes based on a seperate API call to determine tone.
 
-https://github.com/meredythp/slack-personality-bot
+https://meredythp.github.io/emotion-checker/
 
 ## Screenshots
 
-Command Directions Example:
+Start page Example:
 
-![Directions screen](screenshots/directions.png)
+![Start Page](screenshots/start_page_example.png)
 
-Direct Message Example:
+Positive Example:
 
-![DM screen](screenshots/DM.png)
+![Positive emotion result](screenshots/joy_example.png)
 
-Slackbot Profile:
+Negative Example:
 
-![Profile screen](screenshots/profile.png)
+![Negative emtions results](screenshots/negative_example.png)
 
-Personality Results Example:
+No Emotion Example:
 
-![Results screen](screenshots/results_example.png)
+![No emotion results](screenshots/no_emotion_example.png)
+
+Waiting for API Response Example: 
+
+![Pending screen](screenshots/pending_results_example.png)
 
 ## Built With
 * JavaScript
-* Node
-* Ngrok
-* Slack 
+* HTPS
+* CSS
